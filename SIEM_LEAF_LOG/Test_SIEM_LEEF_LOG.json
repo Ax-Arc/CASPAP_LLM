@@ -1,0 +1,129 @@
+[
+    {
+    "original_log": {
+        "LEEFVersion": "1.0",
+        "Vendor": "IBM",
+        "Product": "QRadar",
+        "Version": "1.0",
+        "EventID": "EventID123",
+        "log_format": "LEEF",
+        "src": "192.168.1.100\\tdst=10.0.0.5\\tsrcPort=54321\\tdstPort=443\\tproto=TCP\\tusrName=j.doe\\tsev=8\\tcat=Authentication\\tLCID=Login Failure\\tQID=5000123\\tdevTime=1678886400123\\tpayload=User login failed for j.doe from 192.168.1.100"
+    },
+    "source_ip": "192.168.1.100\\tdst=10.0.0.5\\tsrcPort=54321\\tdstPort=443\\tproto=TCP\\tusrName=j.doe\\tsev=8\\tcat=Authentication\\tLCID=Login Failure\\tQID=5000123\\tdevTime=1678886400123\\tpayload=User login failed for j.doe from 192.168.1.100",
+    "device_vendor": "IBM",
+    "device_product": "QRadar",
+    "device_version": "1.0",
+    "signature_id": "EventID123",
+    "log_format_detected": "LEEF",
+    "custom_LEEFVersion": "1.0"
+    },
+    {
+    "original_log": {
+        "LEEFVersion": "2.0",
+        "Vendor": "Microsoft",
+        "Product": "Windows",
+        "Version": "10.0",
+        "EventID": "Security:4625",
+        "log_format": "LEEF",
+        "devTime": "1678886500000\\tSourceIp=172.16.0.20\\tDestinationIp=172.16.0.1\\tSourcePort=12345\\tDestinationPort=80\\tProtocol=UDP\\tUserName=system\\tSeverity=5\\tHighLevelCategory=Access\\tLowLevelCategory=Failed Logon\\tmsg=An account failed to log on."
+    },
+    "timestamp_epoch_ms": "1678886500000\\tSourceIp=172.16.0.20\\tDestinationIp=172.16.0.1\\tSourcePort=12345\\tDestinationPort=80\\tProtocol=UDP\\tUserName=system\\tSeverity=5\\tHighLevelCategory=Access\\tLowLevelCategory=Failed Logon\\tmsg=An account failed to log on.",
+    "device_vendor": "Microsoft",
+    "device_product": "Windows",
+    "device_version": "10.0",
+    "signature_id": "Security:4625",
+    "log_format_detected": "LEEF",
+    "custom_LEEFVersion": "2.0"
+    },
+    {
+    "original_log": {
+        "LEEFVersion": "1.0",
+        "Vendor": "PaloAltoNetworks",
+        "Product": "PAN-OS",
+        "Version": "9.1",
+        "EventID": "THREAT",
+        "log_format": "LEEF",
+        "sev": "High\\tdst=1.2.3.4\\tsrc=192.168.1.20\\tproto=tcp\\tusrName=\\tdstPort=80\\tpayload=Suspicious traffic detected\\tcat=Malware"
+    },
+    "severity_label": "High\\tdst=1.2.3.4\\tsrc=192.168.1.20\\tproto=tcp\\tusrName=\\tdstPort=80\\tpayload=Suspicious traffic detected\\tcat=Malware",
+    "device_vendor": "PaloAltoNetworks",
+    "device_product": "PAN-OS",
+    "device_version": "9.1",
+    "signature_id": "THREAT",
+    "log_format_detected": "LEEF",
+    "custom_LEEFVersion": "1.0"
+    },
+    {
+    "original_log": {
+        "LEEFVersion": "1.0",
+        "Vendor": "CISCO",
+        "Product": "ASA",
+        "Version": "1.0",
+        "EventID": "106023",
+        "log_format": "LEEF",
+        "src": "203.0.113.10\\tdst=198.51.100.20\\tsrcPort=1024\\tdstPort=22\\tproto=SSH\\tsev=3\\tcat=Firewall\\tLCID=Connection Allowed\\tQID=1000001\\tdevTime=1678886400123\\truleName=Allow_SSH_External"        
+    },
+    "source_ip": "203.0.113.10\\tdst=198.51.100.20\\tsrcPort=1024\\tdstPort=22\\tproto=SSH\\tsev=3\\tcat=Firewall\\tLCID=Connection Allowed\\tQID=1000001\\tdevTime=1678886400123\\truleName=Allow_SSH_External",   
+    "device_vendor": "CISCO",
+    "device_product": "ASA",
+    "device_version": "1.0",
+    "signature_id": "106023",
+    "log_format_detected": "LEEF",
+    "custom_LEEFVersion": "1.0"
+    },
+    {
+    "original_log": {
+        "CEFVersion": "0",
+        "DeviceVendor": "TrendMicro",
+        "DeviceProduct": "DeepSecurity",
+        "DeviceVersion": "12.0",
+        "SignatureID": "1001",
+        "Name": "URLReputationBlocked",
+        "Severity": "6",
+        "log_format": "CEF",
+        "src": "192.168.0.15 dst=34.56.78.90 spt=49152 dpt=80 request=http://malicious.example.com/evil.exe cat=Malware cn1Label=ThreatID cn1=12345"
+    },
+    "source_ip": "192.168.0.15 dst=34.56.78.90 spt=49152 dpt=80 request=http://malicious.example.com/evil.exe cat=Malware cn1Label=ThreatID cn1=12345",
+    "event_name": "URLReputationBlocked",
+    "device_vendor": "TrendMicro",
+    "device_product": "DeepSecurity",
+    "device_version": "12.0",
+    "signature_id": "1001",
+    "log_format_detected": "CEF",
+    "custom_CEFVersion": "0"
+    },
+    {
+    "original_log": {
+        "LEEFVersion": "1.0",
+        "Vendor": "SomeVendor",
+        "Product": "SomeProduct",
+        "Version": "1.0",
+        "EventID": "SomeEvent",
+        "log_format": "LEEF",
+        "keyOnly\\tanotherKey": "val\\tkeyWithEquals=value=stillvalue"
+    },
+    "device_vendor": "SomeVendor",
+    "device_product": "SomeProduct",
+    "device_version": "1.0",
+    "signature_id": "SomeEvent",
+    "log_format_detected": "LEEF",
+    "custom_LEEFVersion": "1.0",
+    "custom_keyOnly\\tanotherKey": "val\\tkeyWithEquals=value=stillvalue"
+    },
+    {
+    "original_log": {
+        "LEEFVersion": "1.0",
+        "Vendor": "MinimalVendor",
+        "Product": "MinimalProduct",
+        "Version": "1.0",
+        "EventID": "MinimalEventID",
+        "log_format": "LEEF"
+    },
+    "device_vendor": "MinimalVendor",
+    "device_product": "MinimalProduct",
+    "device_version": "1.0",
+    "signature_id": "MinimalEventID",
+    "log_format_detected": "LEEF",
+    "custom_LEEFVersion": "1.0"
+    }
+]

@@ -1,0 +1,312 @@
+import json
+import logging
+import os
+
+# ロギング設定
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Mitre ATT&CKとCyber Kill Chainのデータ定義
+# 各フェーズにIDとフェーズ番号を追加
+MITRE_ATTACK_CKC_MAPPING = [
+    {
+        "attack_tactic_id": "TA0043",
+        "attack_tactic_name_en": "Reconnaissance",
+        "attack_tactic_name_jp": "偵察",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-001",
+                "ckc_phase_number": 1,
+                "ckc_phase_name_en": "Reconnaissance",
+                "ckc_description_en": "Attacker gathers information about the target to identify vulnerabilities and plan the attack. This involves collecting public data (OSINT), deploying spying tools, and using automated scanners.",
+                "ckc_phase_name_jp": "偵察",
+                "ckc_description_jp": "攻撃者は、標的に関する情報を収集し、脆弱性を特定し、攻撃を計画します。これには、公開情報（OSINT）の収集、スパイツールの展開、自動スキャナーの使用が含まれます。"
+            }
+        ],
+        "ckc_mapping_rational": "ATT&CKの偵察戦術は、CKCの偵察フェーズに直接対応し、情報収集活動を包含する。"
+    },
+    {
+        "attack_tactic_id": "TA0042",
+        "attack_tactic_name_en": "Resource Development",
+        "attack_tactic_name_jp": "リソース開発",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-002",
+                "ckc_phase_number": 2,
+                "ckc_phase_name_en": "Weaponization",
+                "ckc_description_en": "Attacker creates or acquires a cyber weapon (e.g., malware, virus) tailored to exploit vulnerabilities identified during reconnaissance. This involves packaging an exploit with a malicious payload.",
+                "ckc_phase_name_jp": "武器化",
+                "ckc_description_jp": "攻撃者は、偵察段階で特定された脆弱性を悪用するために調整されたサイバー兵器（例：マルウェア、ウイルス）を作成または入手します。これには、エクスプロイトと悪意のあるペイロードのパッケージ化が含まれます。",
+            }
+        ],
+        "ckc_mapping_rational": "攻撃に使用するリソース（ドメイン、アカウント、マルウェアなど）を準備する活動は、CKCの武器化フェーズに相当する。"
+    },
+    {
+        "attack_tactic_id": "TA0001",
+        "attack_tactic_name_en": "Initial Access",
+        "attack_tactic_name_jp": "初期アクセス",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-003",
+                "ckc_phase_number": 3,
+                "ckc_phase_name_en": "Delivery",
+                "ckc_description_en": "Attacker transmits the weaponized payload to the target system. Common methods include email attachments, malicious websites, or USB drives.",
+                "ckc_phase_name_jp": "配送",
+                "ckc_description_jp": "攻撃者は、武器化されたペイロードを標的システムに送信します。一般的な方法には、電子メールの添付ファイル、悪意のあるWebサイト、USBドライブなどがあります。"
+            },
+            {
+                "ckc_id": "ckc-004",
+                "ckc_phase_number": 4,
+                "ckc_phase_name_en": "Exploitation",
+                "ckc_description_en": "The weaponized payload triggers a vulnerability in the target system to execute malicious code.",
+                "ckc_phase_name_jp": "攻撃（エクスプロイト）",
+                "ckc_description_jp": "武器化されたペイロードが標的システムの脆弱性をトリガーし、悪意のあるコードを実行します。"
+            }
+        ],
+        "ckc_mapping_rational": "標的ネットワークへの最初の足掛かりを築く活動。手法によりCKCの配送（例：フィッシングメール）や攻撃（例：脆弱性悪用）フェーズに関連する。"
+    },
+    {
+        "attack_tactic_id": "TA0002",
+        "attack_tactic_name_en": "Execution",
+        "attack_tactic_name_jp": "実行",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-004",
+                "ckc_phase_number": 4,
+                "ckc_phase_name_en": "Exploitation",
+                "ckc_description_en": "The weaponized payload triggers a vulnerability in the target system to execute malicious code.",
+                "ckc_phase_name_jp": "攻撃（エクスプロイト）",
+                "ckc_description_jp": "武器化されたペイロードが標的システムの脆弱性をトリガーし、悪意のあるコードを実行します。"
+            },
+            {
+                "ckc_id": "ckc-005",
+                "ckc_phase_number": 5,
+                "ckc_phase_name_en": "Installation",
+                "ckc_description_en": "Attacker installs malware or establishes persistent access on the compromised system. This allows the attacker to maintain control for future activities.",
+                "ckc_phase_name_jp": "インストール",
+                "ckc_description_jp": "攻撃者は、侵害されたシステムにマルウェアをインストールするか、永続的なアクセスを確立します。これにより、攻撃者は将来の活動のために制御を維持できます。"
+            }
+        ],
+        "ckc_mapping_rational": "攻撃者が制御するコードを標的システム上で実行する活動。CKCの攻撃フェーズでのペイロード実行や、インストールフェーズでのマルウェア定着に関連する。"
+    },
+    {
+        "attack_tactic_id": "TA0003",
+        "attack_tactic_name_en": "Persistence",
+        "attack_tactic_name_jp": "永続化",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-005",
+                "ckc_phase_number": 5,
+                "ckc_phase_name_en": "Installation",
+                "ckc_description_en": "Attacker installs malware or establishes persistent access on the compromised system. This allows the attacker to maintain control for future activities.",
+                "ckc_phase_name_jp": "インストール",
+                "ckc_description_jp": "攻撃者は、侵害されたシステムにマルウェアをインストールするか、永続的なアクセスを確立します。これにより、攻撃者は将来の活動のために制御を維持できます。"
+            }
+        ],
+        "ckc_mapping_rational": "システム再起動後もアクセスを維持する活動。CKCのインストールフェーズでバックドアなどを設置し、永続的なアクセスを確保する点と一致する。"
+    },
+    {
+        "attack_tactic_id": "TA0004",
+        "attack_tactic_name_en": "Privilege Escalation",
+        "attack_tactic_name_jp": "特権昇格",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-005",
+                "ckc_phase_number": 5,
+                "ckc_phase_name_en": "Installation",
+                "ckc_description_en": "Attacker installs malware or establishes persistent access on the compromised system. This allows the attacker to maintain control for future activities.",
+                "ckc_phase_name_jp": "インストール",
+                "ckc_description_jp": "攻撃者は、侵害されたシステムにマルウェアをインストールするか、永続的なアクセスを確立します。これにより、攻撃者は将来の活動のために制御を維持できます。"
+            },
+            {
+                "ckc_id": "ckc-006",
+                "ckc_phase_number": 6,
+                "ckc_phase_name_en": "Command and Control (C2)",
+                "ckc_description_en": "Attacker establishes a communication channel with the compromised system to remotely control it, exfiltrate data, or issue further commands.",
+                "ckc_phase_name_jp": "コマンド＆コントロール (C2)",
+                "ckc_description_jp": "攻撃者は、侵害されたシステムとの通信チャネルを確立し、リモートで制御したり、データを窃取したり、さらなるコマンドを発行したりします。"
+            }
+        ],
+        "ckc_mapping_rational": "より高い権限レベルを獲得する活動。インストールフェーズで高権限を確保したり、C2確立後にさらなる権限昇格を試みたりする。"
+    },
+    {
+        "attack_tactic_id": "TA0005",
+        "attack_tactic_name_en": "Defense Evasion",
+        "attack_tactic_name_jp": "防御回避",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-005",
+                "ckc_phase_number": 5,
+                "ckc_phase_name_en": "Installation",
+                "ckc_description_en": "Attacker installs malware or establishes persistent access on the compromised system. This allows the attacker to maintain control for future activities.",
+                "ckc_phase_name_jp": "インストール",
+                "ckc_description_jp": "攻撃者は、侵害されたシステムにマルウェアをインストールするか、永続的なアクセスを確立します。これにより、攻撃者は将来の活動のために制御を維持できます。"
+            },
+            {
+                "ckc_id": "ckc-006",
+                "ckc_phase_number": 6,
+                "ckc_phase_name_en": "Command and Control (C2)",
+                "ckc_description_en": "Attacker establishes a communication channel with the compromised system to remotely control it, exfiltrate data, or issue further commands.",
+                "ckc_phase_name_jp": "コマンド＆コントロール (C2)",
+                "ckc_description_jp": "攻撃者は、侵害されたシステムとの通信チャネルを確立し、リモートで制御したり、データを窃取したり、さらなるコマンドを発行したりします。"
+            }
+        ],
+        "ckc_mapping_rational": "セキュリティ対策を回避する活動。マルウェアの隠蔽（インストール）やC2通信の偽装など、複数のCKCフェーズで実施される。"
+    },
+    {
+        "attack_tactic_id": "TA0006",
+        "attack_tactic_name_en": "Credential Access",
+        "attack_tactic_name_jp": "認証情報アクセス",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-005",
+                "ckc_phase_number": 5,
+                "ckc_phase_name_en": "Installation",
+                "ckc_description_en": "Attacker installs malware or establishes persistent access on the compromised system. This allows the attacker to maintain control for future activities.",
+                "ckc_phase_name_jp": "インストール",
+                "ckc_description_jp": "攻撃者は、侵害されたシステムにマルウェアをインストールするか、永続的なアクセスを確立します。これにより、攻撃者は将来の活動のために制御を維持できます。"
+            },
+            {
+                "ckc_id": "ckc-006",
+                "ckc_phase_number": 6,
+                "ckc_phase_name_en": "Command and Control (C2)",
+                "ckc_description_en": "Attacker establishes a communication channel with the compromised system to remotely control it, exfiltrate data, or issue further commands.",
+                "ckc_phase_name_jp": "コマンド＆コントロール (C2)",
+                "ckc_description_jp": "攻撃者は、侵害されたシステムとの通信チャネルを確立し、リモートで制御したり、データを窃取したり、さらなるコマンドを発行したりします。"
+            }
+        ],
+        "ckc_mapping_rational": "アカウント名やパスワードを窃取する活動。永続化のための認証情報窃取（インストール）や、C2後の横展開のための情報収集として行われる。"
+    },
+    {
+        "attack_tactic_id": "TA0007",
+        "attack_tactic_name_en": "Discovery",
+        "attack_tactic_name_jp": "発見",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-006",
+                "ckc_phase_number": 6,
+                "ckc_phase_name_en": "Command and Control (C2)",
+                "ckc_description_en": "Attacker establishes a communication channel with the compromised system to remotely control it, exfiltrate data, or issue further commands.",
+                "ckc_phase_name_jp": "コマンド＆コントロール (C2)",
+                "ckc_description_jp": "攻撃者は、侵害されたシステムとの通信チャネルを確立し、リモートで制御したり、データを窃取したり、さらなるコマンドを発行したりします。"
+            }
+        ],
+        "ckc_mapping_rational": "標的システムやネットワーク環境を調査する活動。C2確立後に内部偵察を行い、次の行動計画を立てるために実施される。"
+    },
+    {
+        "attack_tactic_id": "TA0008",
+        "attack_tactic_name_en": "Lateral Movement",
+        "attack_tactic_name_jp": "横展開",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-006",
+                "ckc_phase_number": 6,
+                "ckc_phase_name_en": "Command and Control (C2)",
+                "ckc_description_en": "Attacker establishes a communication channel with the compromised system to remotely control it, exfiltrate data, or issue further commands.",
+                "ckc_phase_name_jp": "コマンド＆コントロール (C2)",
+                "ckc_description_jp": "攻撃者は、侵害されたシステムとの通信チャネルを確立し、リモートで制御したり、データを窃取したり、さらなるコマンドを発行したりします。"
+            },
+            {
+                "ckc_id": "ckc-007",
+                "ckc_phase_number": 7,
+                "ckc_phase_name_en": "Actions on Objectives",
+                "ckc_description_en": "Attacker achieves their ultimate goals, such as data exfiltration, data destruction, or launching further attacks.",
+                "ckc_phase_name_jp": "目的の実行",
+                "ckc_description_jp": "攻撃者は、データの窃取、データの破壊、さらなる攻撃の開始など、最終的な目的を達成します。"
+            }
+        ],
+        "ckc_mapping_rational": "ネットワーク内の他のシステムへアクセスを拡大する活動。C2を通じて指示され、最終的な目的達成（データ窃取など）に向けた中間段階となることが多い。"
+    },
+    {
+        "attack_tactic_id": "TA0009",
+        "attack_tactic_name_en": "Collection",
+        "attack_tactic_name_jp": "収集",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-007",
+                "ckc_phase_number": 7,
+                "ckc_phase_name_en": "Actions on Objectives",
+                "ckc_description_en": "Attacker achieves their ultimate goals, such as data exfiltration, data destruction, or launching further attacks.",
+                "ckc_phase_name_jp": "目的の実行",
+                "ckc_description_jp": "攻撃者は、データの窃取、データの破壊、さらなる攻撃の開始など、最終的な目的を達成します。"
+            }
+        ],
+        "ckc_mapping_rational": "攻撃者の目的に関連するデータを集める活動。CKCの目的の実行フェーズで、窃取対象の情報を特定し集約する。"
+    },
+    {
+        "attack_tactic_id": "TA0011",
+        "attack_tactic_name_en": "Command and Control",
+        "attack_tactic_name_jp": "コマンド＆コントロール",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-006",
+                "ckc_phase_number": 6,
+                "ckc_phase_name_en": "Command and Control (C2)",
+                "ckc_description_en": "Attacker establishes a communication channel with the compromised system to remotely control it, exfiltrate data, or issue further commands.",
+                "ckc_phase_name_jp": "コマンド＆コントロール (C2)",
+                "ckc_description_jp": "攻撃者は、侵害されたシステムとの通信チャネルを確立し、リモートで制御したり、データを窃取したり、さらなるコマンドを発行したりします。"
+            }
+        ],
+        "ckc_mapping_rational": "侵害システムとの双方向通信を確立・維持する活動。CKCのコマンド＆コントロールフェーズに直接対応する。"
+    },
+    {
+        "attack_tactic_id": "TA0010",
+        "attack_tactic_name_en": "Exfiltration",
+        "attack_tactic_name_jp": "データ持ち出し",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-007",
+                "ckc_phase_number": 7,
+                "ckc_phase_name_en": "Actions on Objectives",
+                "ckc_description_en": "Attacker achieves their ultimate goals, such as data exfiltration, data destruction, or launching further attacks.",
+                "ckc_phase_name_jp": "目的の実行",
+                "ckc_description_jp": "攻撃者は、データの窃取、データの破壊、さらなる攻撃の開始など、最終的な目的を達成します。"
+            }
+        ],
+        "ckc_mapping_rational": "標的ネットワークからデータを盗み出す活動。CKCの目的の実行フェーズにおける主要な攻撃目標の一つ。"
+    },
+    {
+        "attack_tactic_id": "TA0040",
+        "attack_tactic_name_en": "Impact",
+        "attack_tactic_name_jp": "影響",
+        "ckc_map_info": [
+            {
+                "ckc_id": "ckc-007",
+                "ckc_phase_number": 7,
+                "ckc_phase_name_en": "Actions on Objectives",
+                "ckc_description_en": "Attacker achieves their ultimate goals, such as data exfiltration, data destruction, or launching further attacks.",
+                "ckc_phase_name_jp": "目的の実行",
+                "ckc_description_jp": "攻撃者は、データの窃取、データの破壊、さらなる攻撃の開始など、最終的な目的を達成します。"
+            }
+        ],
+        "ckc_mapping_rational": "システムの可用性や完全性を破壊、妨害、操作する活動。ランサムウェアによる暗号化やワイパー攻撃など、CKCの目的の実行フェーズにおける破壊的活動。"
+    }
+]
+
+def save_to_json(data, filename="mitre_attack_ckc_mapping_jp.json"):
+    """
+    指定されたデータをJSONファイルに保存します。
+
+    Args:
+        data (list): 保存するデータのリスト（辞書を含む）。
+        filename (str): 出力するJSONファイル名。
+    """
+    try:
+        filepath = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Data', filename)
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+        logging.info(f"Mitre ATT&CKとCyber Kill Chainのマッピングデータが正常に '{filepath}' に保存されました。")
+    except IOError as e:
+        logging.error(f"ファイル '{filepath}' の書き込み中にエラーが発生しました: {e}")
+    except Exception as e:
+        logging.error(f"予期せぬエラーが発生しました: {e}")
+
+def main():
+    """
+    メイン処理関数。Mitre ATT&CKとCyber Kill ChainのマッピングデータをJSONファイルとして保存します。
+    """
+    logging.info("Mitre ATT&CKとCyber Kill Chainのマッピングデータ生成スクリプトを開始します。")
+    save_to_json(MITRE_ATTACK_CKC_MAPPING)
+    logging.info("Mitre ATT&CKとCyber Kill Chainのマッピングデータ生成スクリプトが完了しました。")
+
+if __name__ == "__main__":
+    main()

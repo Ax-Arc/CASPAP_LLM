@@ -1,0 +1,64 @@
+<mxfile host="65bd71144e">
+    <diagram id="Uua6QV4H5xX1lMTJxmGv" name="ページ1">
+        <mxGraphModel dx="1363" dy="744" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="&lt;font style=&quot;&quot;&gt;&lt;b&gt;データ基盤&lt;/b&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;fillColor=light-dark(#E3C800,#FFFF99);strokeColor=#B09500;fontColor=light-dark(#000000,#000000);align=center;labelPosition=center;verticalLabelPosition=top;verticalAlign=bottom;" vertex="1" parent="1">
+                    <mxGeometry x="880" y="80" width="400" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="" style="whiteSpace=wrap;html=1;fillColor=light-dark(#FFCD28,#FFCC99);strokeColor=light-dark(#D79B00,#CC6600);gradientColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="995" y="100" width="170" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="" style="whiteSpace=wrap;html=1;fillColor=light-dark(#FFCD28,#FFCC99);strokeColor=light-dark(#D79B00,#CC6600);gradientColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="900" y="220" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="マスター学習データセット&#xa;(準備したATTACK情報, &#xa;SIEMログ, 補足データなど)" style="text;strokeColor=none;align=center;fillColor=none;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+                    <mxGeometry x="997.5" y="115" width="165" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="SFT用データセット作成&#xa;高品質な指示と応答の&#xa;ペアを抽出・生成" style="text;strokeColor=none;align=center;fillColor=none;verticalAlign=middle;rounded=0;fontColor=light-dark(#000000,#000000);fontFamily=Helvetica;labelBorderColor=none;textShadow=0;fontStyle=0;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="902.5" y="227.5" width="165" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="whiteSpace=wrap;html=1;fillColor=light-dark(#FFCD28,#FFCC99);strokeColor=light-dark(#D79B00,#CC6600);gradientColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="1090" y="220" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="SFT用データセット作成&#xa;高品質な指示と応答の&#xa;ペアを抽出・生成" style="text;strokeColor=none;align=center;fillColor=none;verticalAlign=middle;rounded=0;fontColor=light-dark(#000000,#000000);fontFamily=Helvetica;labelBorderColor=none;textShadow=0;fontStyle=0;whiteSpace=wrap;labelBackgroundColor=none;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="1092.5" y="227.5" width="165" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="&lt;font style=&quot;&quot;&gt;&lt;b&gt;強化学習とファインチューニング&lt;/b&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;fillColor=light-dark(#E3C800,#FFFF99);strokeColor=#B09500;fontColor=light-dark(#000000,#000000);align=center;labelPosition=center;verticalLabelPosition=top;verticalAlign=bottom;shadow=0;" vertex="1" parent="1">
+                    <mxGeometry x="120" y="80" width="730" height="930" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="" style="whiteSpace=wrap;html=1;fillColor=light-dark(#FFCD28,#CCFFCC);strokeColor=light-dark(#D79B00,#CC6600);gradientColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="242.5" y="100" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="ベースモデル準備&#xa;（llm-jp/llm-jp-3-13b-instruct3）&#xa;環境設定・初期構成" style="text;strokeColor=none;align=center;fillColor=none;verticalAlign=middle;rounded=0;fontColor=light-dark(#000000,#000000);fontFamily=Helvetica;labelBorderColor=none;textShadow=0;fontStyle=0;whiteSpace=wrap;labelBackgroundColor=none;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="245" y="107.5" width="165" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="" style="rhombus;whiteSpace=wrap;html=1;fillColor=light-dark(#FFCD28,#FF9933);gradientColor=none;strokeColor=#d79b00;" vertex="1" parent="1">
+                    <mxGeometry x="245" y="200" width="165" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="教師ありファイン&#xa;チューニング（SFT）" style="text;strokeColor=none;align=center;fillColor=none;verticalAlign=middle;rounded=0;fontColor=light-dark(#000000,#000000);fontFamily=Helvetica;labelBorderColor=none;textShadow=0;fontStyle=0;whiteSpace=wrap;labelBackgroundColor=none;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="245" y="217.5" width="165" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="" style="whiteSpace=wrap;html=1;fillColor=light-dark(#FFCD28,#99CCFF);strokeColor=light-dark(#D79B00,#CC6600);gradientColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="412.5" y="290" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="SFT学習&#xa;高品質データで応答形式&#xa;ドメイン知識を初期学習" style="text;strokeColor=none;align=center;fillColor=none;verticalAlign=middle;rounded=0;fontColor=light-dark(#000000,#000000);fontFamily=Helvetica;labelBorderColor=none;textShadow=0;fontStyle=0;whiteSpace=wrap;labelBackgroundColor=none;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="415" y="297.5" width="165" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="" style="whiteSpace=wrap;html=1;fillColor=light-dark(#FFCD28,#CCFFCC);strokeColor=light-dark(#D79B00,#CC6600);gradientColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="412.5" y="390" width="170" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="SFT済みLLMモデル" style="text;strokeColor=none;align=center;fillColor=none;verticalAlign=middle;rounded=0;fontColor=light-dark(#000000,#000000);fontFamily=Helvetica;labelBorderColor=none;textShadow=0;fontStyle=0;whiteSpace=wrap;labelBackgroundColor=none;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="417.5" y="393.75" width="165" height="32.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="" style="whiteSpace=wrap;html=1;fillColor=light-dark(#FFCD28,#99CCFF);strokeColor=light-dark(#D79B00,#CC6600);gradientColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="240" y="470" width="170" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="報酬関数の定義&#xa;（TTP/CKC予測精度, 防御策提案の質, 明確さ, &#xa;信頼度スコア等）" style="text;strokeColor=none;align=center;fillColor=none;verticalAlign=middle;rounded=0;fontColor=light-dark(#000000,#000000);fontFamily=Helvetica;labelBorderColor=none;textShadow=0;fontStyle=0;whiteSpace=wrap;labelBackgroundColor=none;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="242.5" y="475" width="165" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
