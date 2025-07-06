@@ -109,11 +109,22 @@ def get_attack_enterprise_data_with_subtechniques(stix_file_path):
                 subtechniques_of_technique = []# 空リストで初期化
 
             for sub_technique_obj in subtechniques_of_technique:
+
+                # kill_chain_phases から phase_name を抽出し、カンマ区切りで結合
+                phases_str = ",".join(
+                    [
+                        p.get("phase_name", "")
+                        for p in getattr(sub_technique_obj['object'], 'kill_chain_phases', [])
+                    ]
+                )
+
                 sub_technique_details = {
                     # "id": sub_technique_obj.external_references.external_id if hasattr(sub_technique_obj, 'external_references') and sub_technique_obj.external_references else "N/A", # external_referencesがリストであることを考慮
                     "id": sub_technique_obj['object'].external_references[0]['external_id'] if hasattr(sub_technique_obj['object'], 'external_references') and sub_technique_obj['object'].external_references and isinstance(sub_technique_obj['object'].external_references, list) and 'external_id' in sub_technique_obj['object'].external_references[0] else "N/A",
                     "name_eng": getattr(sub_technique_obj['object'], 'name', "N/A"),
-                    "description_eng": getattr(sub_technique_obj['object'], 'description', "No description available.").strip()
+                    "description_eng": getattr(sub_technique_obj['object'], 'description', "No description available.").strip(),
+                    # 抽出した文字列を "phases" キーに追加
+                    "phases": phases_str if phases_str else "N/A"
                 }
                 technique_details["subtechniques"].append(sub_technique_details)
             
@@ -141,7 +152,7 @@ if __name__ == "__main__":
         
         if attack_ttps_with_subs is not None: # Noneでないことを確認
             if attack_ttps_with_subs: # データが空でないことも確認
-                output_filename = "mitre_attack_enterprise_data_with_subtechniques_eng.json"
+                output_filename = "mitre_attack_enterprise_data_with_subtechniques_eng_v2.json"
                 output_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Data', output_filename)
                 try:
                     with open(output_path, "w", encoding="utf-8") as f:
