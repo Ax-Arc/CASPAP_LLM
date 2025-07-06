@@ -44,8 +44,8 @@ ASSET_DATA_PATH = "asset_management.csv"
 # ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 # ★ 重要: 実際の環境では、APIキーは環境変数やシークレット管理ツールで管理してください ★
 # ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-# VIRUSTOTAL_API_KEY = os.environ.get("VIRUSTOTAL_API_KEY", "YOUR_VIRUSTOTAL_API_KEY_HERE")
-VIRUSTOTAL_API_KEY = os.environ.get("VIRUSTOTAL_API_KEY", "84926f74bb0d06fd8126c3edde36c3f4ceb2edf67585f333affebc85cad26a17")
+VIRUSTOTAL_API_KEY = os.environ.get("VIRUSTOTAL_API_KEY", "YOUR_VIRUSTOTAL_API_KEY_HERE")
+# VIRUSTOTAL_API_KEY = os.environ.get("VIRUSTOTAL_API_KEY", "")
 
 # グローバル変数
 ACTIVE_MODEL = None
@@ -361,6 +361,7 @@ async def chat_endpoint(request: ChatRequest):
 # 例2: {{"tool": "firewall", "arguments": {{"ip_address": "1.2.3.4"}}}}
 # 例3: {{"tool": "none", "arguments": {{}}}}
 # """
+        # 思考プロセス（Chain of Thought）の導入: LLMに判断の根拠を段階的に考えさせ、その上で最終的なツールを決定させる方法
         tool_prompt = f"""あなたは、ユーザーの依頼を分析し、適切なツールを選択する優秀なAIアシスタントです。
 以下のステップに従って、最終的な判断をJSON形式で出力してください。
 
