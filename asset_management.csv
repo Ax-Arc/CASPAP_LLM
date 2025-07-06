@@ -1,0 +1,8 @@
+ip_address,hostname,role,importance,department
+244.24.214.166,ad-server-01,ADサーバ,高,情報システム部
+192.168.1.10,app-server-01,APサーバ,高,製造部
+192.168.1.30,db-server-prod,DBサーバ,最高,技術部
+192.168.1.40,file-share-01,ファイルサーバ,中,総務部
+10.0.0.5,web-external,APサーバ,高,開発部
+8.8.8.8,google-dns,DNSサーバ,低,外部サービス
+1.1.1.1,cloudflare-dns,DNSサーバ,低,外部サービス
