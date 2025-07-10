@@ -5,7 +5,7 @@ import time
 import pandas as pd
 import math
 
-FASTAPI_URL = "http://192.168.1.168:8000"
+FASTAPI_URL = "http://172.0.0.1:8000"
 
 st.set_page_config(layout="wide")
 st.title("LLM 比較・学習・評価 UI")

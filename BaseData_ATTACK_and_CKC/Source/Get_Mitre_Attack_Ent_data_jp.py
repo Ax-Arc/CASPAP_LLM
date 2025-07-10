@@ -32,7 +32,7 @@ except ImportError:
 
 # --- DeepL API 設定 ---
 # DEEPL_AUTH_KEY = os.getenv("DEEPL_AUTH_KEY")
-DEEPL_AUTH_KEY = '67373c09-40c8-4802-b20b-5b336bf2604a:fx'
+DEEPL_AUTH_KEY = 'YOURE DeepL AUTH KEY '
 if not DEEPL_AUTH_KEY:
     print("エラー: DeepL APIの認証キーが環境変数 DEEPL_AUTH_KEY に設定されていません。")
     print("スクリプトを終了します。")
