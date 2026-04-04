@@ -20,9 +20,6 @@
 - `Marge_ATTACK_ENT_with_subtec_CKC_mapping.py`: 各データを統合し、最終的なマッピング済みJSONやCSVを出力します。
 - `Split_Attack_ckc_mapping_jp.py`: 統合データの処理や分割などを行います。
 
-### `backup/`
-プロセッサスクリプト（`data_processor.py` 等）の退避コードや、データ整形テスト用の出力ファイル、その他JSONデータのバックアップが保管されています。
-
 ## ワークフロー・役割
 
 主に `Source/` のスクリプト群を実行することで、MITRE ATT&CK の脅威インテリジェンスと、Cyber Kill Chain のフェーズを関連付けます。これにより、自立型のスクリプトやLLMが読み込みやすい形式(JSON/CSV)に統合されたデータ (`Data/` フォルダ配下) を生成・提供することを主目的としています。
