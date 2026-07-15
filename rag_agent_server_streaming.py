@@ -157,7 +157,7 @@ def check_virustotal(ip_address: str) -> str:
     
     except requests.exceptions.RequestException as e:
         logger.error(f"VirusTotal API request failed: {e}")
-        return f"Failed to get VirusTotal report for {ip_address}. Error: {e}"
+        return f"Failed to get VirusTotal report for {ip_address} due to an internal service error."
 
 def apply_firewall_rule(ip_address: str) -> str:
     """ファイアウォールルール適用スクリプトを実行する（シミュレーション）"""
